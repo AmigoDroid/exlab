@@ -28,12 +28,7 @@ class Application {
   }
 
   use(pathOrFn, maybeRouter) {
-    if (typeof pathOrFn === "function") {
-      this.routerService.useMiddleware(pathOrFn);
-    } else {
-      this.routerService.setUse(pathOrFn, maybeRouter);
-    }
-
+    this.routerService.setUse(pathOrFn, maybeRouter);
     return this;
   }
 

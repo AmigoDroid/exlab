@@ -9,15 +9,8 @@ class Layer {
   }
   handle(req, res, nexthook) {
     let index = 0;
-
-    console.log("HOOKS DA LAYER:", this.hooks);
-
     const next = () => {
       const hook = this.hooks[index++];
-
-      console.log("HOOK ATUAL:", hook);
-      console.log("TIPO:", typeof hook);
-
       if (!hook) return nexthook();
 
       hook(req, res, next);

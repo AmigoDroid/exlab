@@ -23,7 +23,14 @@ class Router {
     this.layers.push(layer);
   }
   //sem uso por equanto
-  use(hooks) {
+  use(pathOfFn, ...hooks) {
+    const routerService = new RouterService();
+    if (typeof pathOrFn === "function") {
+      this.routerService.useMiddleware(pathOrFn);
+    } else {
+      this.routerService.setUse(pathOrFn, maybeRouter);
+    }
+
     return this;
   }
   //sem uso

@@ -1,23 +1,25 @@
 class Response {
   constructor(res) {
     this.res = res;
-  }
-  method() {
-    return this.res.method;
-  }
-  path() {
-    return this.res.path;
-  }
-  headers() {
-    return this.res.headers;
-  }
-  send(text) {
-    this.res.writeHead(200, { "Content-Type": "text/plain" });
-    this.res.end(text);
-  }
-  json(data) {
-    this.res.writeHead(200, { "Content-Type": "application/json" });
-    this.res.end(JSON.stringify(data));
+    ///add send
+    this.res.send = function (text) {
+      this.writeHead(this.statusCode || 200, {
+        "Content-Type": "text/plain",
+      });
+      this.end(text);
+    };
+    //add json
+    this.res.json = function (obj) {
+      this.writeHead(this.statusCode || 200, {
+        "Content-Type": "application/json",
+      });
+      this.end(JSON.stringify(obj));
+    };
+    //add status
+    this.res.status = function (code) {
+      this.statusCode = code;
+      return this;
+    };
   }
 }
 export { Response };

@@ -1,8 +1,11 @@
 import { Stack } from "../core/Stack.js";
 import { LayerFactory } from "../factory/LayerFactory.js";
+import { bodyParserMiddleware } from "../middleware/bodyParser.js";
+import { sanatizePath } from "../utils/sanatizePath.js";
 class RouterService {
   constructor() {
     this.stack = new Stack();
+    this.middlewares = [bodyParserMiddleware];
   }
   setGet(path, ...hooks) {
     const layer = new LayerFactory("GET", path, hooks).getLayer();
@@ -29,13 +32,26 @@ class RouterService {
     layers.forEach((layer) => {
       const newLayer = new LayerFactory(
         layer.method,
-        prefix + layer.path,
+        sanatizePath(prefix + layer.path),
         layer.hooks,
       ).getLayer();
       this.stack.add(newLayer);
     });
   }
+
   handle(request, response) {
+    let index = 0;
+    const nextMiddleware = () => {
+      const mw = this.middlewares[index++];
+
+      if (!mw) {
+        return this.matchRoute(request, response);
+      }
+      mw(request, response, nextMiddleware);
+    };
+    nextMiddleware();
+  }
+  matchRoute(request, response) {
     const layers = this.stack.getLayers();
 
     let index = 0;
@@ -79,6 +95,9 @@ class RouterService {
     };
 
     next();
+  }
+  useMiddleware(fn) {
+    this.middlewares.push(fn);
   }
 }
 export { RouterService };

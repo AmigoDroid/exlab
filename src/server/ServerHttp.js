@@ -9,12 +9,12 @@ class ServerHttp {
   }
 
   handleRequest(req, res) {
-    const request = new Request(req);
-    const response = new Response(res);
+    new Response(res);
+    const requeste = new Request(req);
 
     console.log(this.router);
 
-    // this.router.handle(request, response);
+    this.router.handle(requeste, res);
   }
 
   listen(port, callback) {

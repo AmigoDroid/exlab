@@ -27,8 +27,13 @@ class Application {
     return this;
   }
 
-  use(prefix, router) {
-    this.routerService.setUse(prefix, router);
+  use(pathOrFn, maybeRouter) {
+    if (typeof pathOrFn === "function") {
+      this.routerService.useMiddleware(pathOrFn);
+    } else {
+      this.routerService.setUse(pathOrFn, maybeRouter);
+    }
+
     return this;
   }
 

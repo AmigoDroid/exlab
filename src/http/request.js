@@ -1,12 +1,14 @@
+import { sanatizePath } from "../utils/sanatizePath.js";
+
 class Request {
   constructor(req) {
     this.raw = req;
 
     this.method = req.method;
-    this.path = req.url;
+    this.path = sanatizePath(req.url);
     this.headers = req.headers;
   }
-  w;
+
   getIP() {
     return this.raw.socket.remoteAddress;
   }
@@ -19,6 +21,7 @@ class Request {
   getHeaders() {
     return this.headers;
   }
+
   getBody() {
     return new Promise((resolve, reject) => {
       let body = "";

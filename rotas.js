@@ -10,6 +10,7 @@ login.get(
     next();
   },
   (req, res) => {
+    
     res.json({ status: "ok", isFuncionando: true });
   },
 );
